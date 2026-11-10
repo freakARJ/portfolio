@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact | Arifur Rahman Jawad</title>
+<meta name="description" content="Send me a message, or find me on GitHub and LinkedIn.">
+<meta name="theme-color" content="#06100b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<script>
+/* Apply saved theme before paint to avoid a flash. Default is dark. */
+try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}
+document.documentElement.classList.add("js");
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="contact">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="arjawad, home">arjawad<i>_</i></a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="journey.html">QA Journey</a>
+      <a href="ideas.html">Free Ideas</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+    <div class="tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to light mode" aria-pressed="false" title="Toggle dark / light"><span aria-hidden="true">&#9790;</span></button>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span aria-hidden="true">&#9776;</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="main-pad">
+  <div class="wrap">
+    <div class="page-head"><h1>Let us talk.</h1><p>Send me a message, or find me on GitHub and LinkedIn.</p></div>
+    <div class="contact">
+      <div class="card">
+        <h2>Reach me directly</h2>
+        <div class="links">
+          <a class="btn" href="mailto:arjawad.cse@gmail.com">arjawad.cse@gmail.com</a>
+          <button class="btn" id="show-phone" type="button">Show phone number</button>
+          <a class="btn" href="https://github.com/freakARJ" target="_blank" rel="noopener">GitHub: freakARJ</a>
+          <a class="btn" href="https://www.linkedin.com/in/arjawad" target="_blank" rel="noopener">LinkedIn: arjawad</a>
+        </div>
+      </div>
+      <form class="card" id="cform" novalidate>
+        <h2>Send a message</h2>
+        <label>Your name (optional)<input name="name" autocomplete="name"></label>
+        <label>Your email (optional)<input name="email" type="email" autocomplete="email"></label>
+        <label>Message<textarea name="message" required aria-describedby="cerr"></textarea></label>
+        <p class="err" id="cerr" role="alert"></p>
+        <button class="btn primary" type="submit">Open in my email app</button>
+        <p class="hint">This opens your email app with the message ready to send.</p>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot">
+    <span>&copy; <span id="year">2026</span> Arifur Rahman Jawad</span>
+    <nav aria-label="Social">
+      <a href="https://github.com/freakARJ" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/arjawad" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:arjawad.cse@gmail.com">Email</a>
+    </nav>
+  </div>
+</footer>
+<script src="content.js"></script>
+<script src="config.js"></script>
+<script src="pages.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
