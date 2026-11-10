@@ -1,0 +1,15 @@
+name: Keep Supabase awake
+on:
+  schedule:
+    - cron: "17 3 */3 * *"
+  workflow_dispatch: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask the database for one row
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          curl -fsS "$SUPABASE_URL/rest/v1/entries?select=id&limit=1" -H "apikey: $SUPABASE_KEY"
