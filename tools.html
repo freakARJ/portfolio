@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tools &amp; Automation Playground | Arifur Rahman Jawad</title>
-<meta name="description" content="QA tools and an interactive Playwright Automation Playground for practicing locators, actions, and assertions.">
+<title>Tools | Arifur Rahman Jawad</title>
+<meta name="description" content="QA tools and interactive practice labs built for testers.">
 <meta name="theme-color" content="#06100b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,77 +15,6 @@ try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.docu
 document.documentElement.classList.add("js");
 </script>
 <link rel="stylesheet" href="styles.css">
-<style>
-.tool-hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:32px}
-.tool-card{display:flex;flex-direction:column;justify-content:space-between;gap:10px}
-.tool-card.soon{border-style:dashed;opacity:.8}
-
-.pg-status-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;margin-bottom:24px;border-radius:var(--r);background:var(--surface-strong);border:1px solid var(--line-bright);font:.85rem var(--f-mono)}
-.pg-status-bar b{color:var(--accent-text)}
-
-.pg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-.pg-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:grid;gap:16px;align-content:start}
-.pg-panel h2{margin:0;font-size:1.25rem}
-.pg-sub{margin:-8px 0 4px;color:var(--muted);font-size:.92rem}
-
-.pg-group{display:grid;gap:10px;padding-top:12px;border-top:1px dashed var(--line)}
-.pg-group:first-of-type{padding-top:0;border-top:0}
-.pg-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-
-fieldset.pg-fs{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:0;display:flex;flex-wrap:wrap;gap:14px}
-fieldset.pg-fs legend{font:600 .85rem var(--f-head);padding:0 6px;color:var(--muted)}
-.pg-inline{display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer}
-.pg-inline input{width:18px;height:18px;margin:0;accent-color:var(--accent)}
-
-select.pg-select{font:1rem var(--f-head);color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
-.pg-out{padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--bg-2) 80%,transparent);border:1px solid var(--line);font:.84rem var(--f-mono);color:var(--accent-text);min-height:40px;display:flex;align-items:center}
-
-/* Custom searchable combobox */
-.combo{position:relative}
-.combo-list{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;margin:0;padding:6px;list-style:none;background:var(--surface-strong);border:1px solid var(--line-bright);border-radius:12px;box-shadow:var(--shadow-3d);max-height:190px;overflow:auto}
-.combo-list[hidden]{display:none}
-.combo-list li{padding:8px 10px;border-radius:8px;cursor:pointer;font-size:.94rem}
-.combo-list li:hover,.combo-list li[aria-selected="true"]{background:var(--glow);color:var(--accent-text)}
-
-/* Hover & Drag-drop */
-.hover-wrap{position:relative;display:inline-block}
-.tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 10px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font:600 .78rem var(--f-mono);box-shadow:0 8px 20px rgba(0,0,0,.35)}
-.tooltip[hidden]{display:none}
-
-.dnd-area{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.drag-item{padding:14px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line-bright);font:.85rem var(--f-mono);text-align:center;cursor:grab;user-select:none}
-.drag-item:active{cursor:grabbing}
-.drop-zone{padding:14px;border-radius:12px;border:2px dashed var(--line);text-align:center;font:.85rem var(--f-mono);color:var(--muted);transition:border-color .2s,background .2s}
-.drop-zone.over{border-color:var(--accent);background:var(--glow);color:var(--text)}
-.drop-zone.done{border-style:solid;border-color:var(--accent);color:var(--accent-text)}
-
-/* Data Table */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
-table.pg-tbl{width:100%;border-collapse:collapse;font-size:.9rem}
-.pg-tbl th,.pg-tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
-.pg-tbl th{background:color-mix(in srgb,var(--bg-2) 80%,transparent);font:600 .82rem var(--f-mono);color:var(--muted)}
-.pg-tbl th button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;color:inherit}
-.pg-tbl th button:hover{color:var(--accent-text)}
-.pg-tbl tr:last-child td{border-bottom:0}
-
-/* Iframe & Shadow host */
-.pg-frame{width:100%;height:112px;border:1px solid var(--line);border-radius:12px;background:var(--bg-2)}
-.shadow-box{padding:12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--bg-2) 65%,transparent)}
-
-/* Modal */
-.modal-backdrop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.68);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
-.modal-backdrop[hidden]{display:none}
-.modal-box{width:min(460px,100%);background:var(--surface-strong);border:1px solid var(--line-bright);border-radius:var(--r);padding:24px;box-shadow:var(--shadow-3d);display:grid;gap:14px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.modal-head h3{margin:0}
-
-/* Cheat sheet */
-.cheat{margin-top:28px}
-.cheat pre{margin:8px 0 0;overflow-x:auto;background:var(--surface-strong);border:1px solid var(--line);border-radius:12px;padding:16px;font:.84rem/1.6 var(--f-mono)}
-
-@media(max-width:900px){.pg-grid{grid-template-columns:1fr}}
-@media(max-width:520px){.dnd-area{grid-template-columns:1fr}}
-</style>
 </head>
 <body data-page="tools">
 <canvas id="bg-3d" aria-hidden="true"></canvas>
@@ -112,241 +41,35 @@ table.pg-tbl{width:100%;border-collapse:collapse;font-size:.9rem}
 <main id="main" class="main-pad">
   <div class="wrap">
     <div class="page-head">
-      <p class="role">QA Practice Lab</p>
-      <h1>Tools &amp; Automation Playground</h1>
-      <p>Interactive tools for practicing Playwright: Navigate, Locate, Act, and Assert.</p>
+      <p class="role">QA Lab</p>
+      <h1>Tools I built for testing.</h1>
+      <p>Practice labs and utilities for QA engineers. Pick a tool to launch it.</p>
     </div>
 
-    <!-- Tool Directory (add future tools here) -->
-    <section aria-label="Available tools">
-      <div class="grid tool-hub">
-        <article class="card tool-card">
-          <div>
-            <p class="kind">TOOL 01 // ACTIVE</p>
-            <h2>Automation Playground</h2>
-            <p>Practice forms, custom dropdowns, drag-and-drop, tables, iframes, Shadow DOM, dialogs, and async delays.</p>
-          </div>
-          <p class="more"><a href="#playground">Jump to playground &darr;</a></p>
-        </article>
-        <article class="card tool-card soon">
-          <div>
-            <p class="kind">TOOL 02 // COMING SOON</p>
-            <h2>More QA Utilities</h2>
-            <p>Test data generators, JSON schema checkers, and lightweight API helpers will be added here.</p>
-          </div>
-        </article>
-      </div>
-    </section>
+    <div class="grid">
+      <article class="card">
+        <p class="kind">TOOL 01 // PLAYWRIGHT LAB</p>
+        <h2><a href="playground.html">Automation Playground</a></h2>
+        <p>A complete practice page with form inputs, searchable dropdowns, drag-and-drop, sortable tables, iframes, Shadow DOM, modals, JS dialogs, and async delays.</p>
+        <ul class="chips">
+          <li>Playwright</li>
+          <li>Locators</li>
+          <li>Assertions</li>
+        </ul>
+        <p class="more"><a href="playground.html">Launch Automation Playground &rarr;</a></p>
+      </article>
 
-    <!-- Live Action Log for Students -->
-    <div class="pg-status-bar" id="playground" role="status" aria-live="polite">
-      <span>Last action: <b id="pw-log">Playground ready. Interact with any element below.</b></span>
-      <button class="btn sm" id="reset-pg" type="button">Reset Playground</button>
+      <article class="card" style="border-style:dashed;opacity:.82">
+        <p class="kind">TOOL 02 // COMING SOON</p>
+        <h2>More QA Tools</h2>
+        <p>More utilities—like test data generators and lightweight API helpers—will be added here over time.</p>
+        <ul class="chips">
+          <li class="soon">In progress</li>
+        </ul>
+      </article>
     </div>
-
-    <div class="pg-grid">
-      <!-- 1. FORM INPUTS -->
-      <section class="pg-panel" aria-labelledby="p1-h">
-        <h2 id="p1-h">1. Form Inputs</h2>
-        <p class="pg-sub">Practice <code>getByLabel()</code>, <code>getByRole()</code>, <code>.fill()</code>, <code>.check()</code>, and <code>setInputFiles()</code>.</p>
-
-        <form id="pg-form" class="pg-group" novalidate>
-          <label>Full name
-            <input type="text" name="fullname" placeholder="e.g. Arifur Rahman" data-testid="input-fullname">
-          </label>
-
-          <label>Secret token
-            <div class="pg-row">
-              <input type="password" name="token" id="pw-token" placeholder="Enter test token" style="flex:1">
-              <button class="btn sm" type="button" id="toggle-token" aria-pressed="false">Show</button>
-            </div>
-          </label>
-
-          <fieldset class="pg-fs">
-            <legend>Environment</legend>
-            <label class="pg-inline"><input type="radio" name="env" value="Staging" checked> Staging</label>
-            <label class="pg-inline"><input type="radio" name="env" value="QA Sandbox"> QA Sandbox</label>
-            <label class="pg-inline"><input type="radio" name="env" value="Production"> Production</label>
-          </fieldset>
-
-          <fieldset class="pg-fs">
-            <legend>Test types</legend>
-            <label class="pg-inline"><input type="checkbox" name="ttype" value="Smoke"> Smoke</label>
-            <label class="pg-inline"><input type="checkbox" name="ttype" value="Regression"> Regression</label>
-            <label class="pg-inline"><input type="checkbox" name="ttype" value="API"> API</label>
-          </fieldset>
-
-          <label>Release date
-            <input type="date" name="rdate">
-          </label>
-
-          <label>Upload test log
-            <input type="file" name="logfile" id="file-in">
-          </label>
-          <div class="pg-out" id="file-status" data-testid="file-status">No file selected</div>
-
-          <div class="pg-row">
-            <button class="btn primary sm" type="submit">Submit Form</button>
-          </div>
-          <div class="pg-out" id="form-result" data-testid="form-result">Form not submitted yet</div>
-        </form>
-      </section>
-
-      <!-- 2. SELECTIONS & ACTIONS -->
-      <section class="pg-panel" aria-labelledby="p2-h">
-        <h2 id="p2-h">2. Selections &amp; Actions</h2>
-        <p class="pg-sub">Practice <code>selectOption()</code>, comboboxes, <code>dblclick()</code>, <code>hover()</code>, and <code>dragTo()</code>.</p>
-
-        <div class="pg-group">
-          <label>Browser
-            <select class="pg-select" id="browser-sel">
-              <option value="">-- Choose browser --</option>
-              <option value="chromium">Chromium</option>
-              <option value="firefox">Firefox</option>
-              <option value="webkit">WebKit (Safari)</option>
-            </select>
-          </label>
-
-          <label for="suite-combo">Test Suite (searchable dropdown)</label>
-          <div class="combo">
-            <input id="suite-combo" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suite-list" placeholder="Type to filter suites...">
-            <ul class="combo-list" id="suite-list" role="listbox" hidden></ul>
-          </div>
-          <div class="pg-out" id="select-result" data-testid="select-result">No selection yet</div>
-        </div>
-
-        <div class="pg-group">
-          <div class="pg-row">
-            <button class="btn sm" type="button" id="dbl-btn">Double-click me</button>
-            <button class="btn sm" type="button" id="ctx-btn">Right-click me</button>
-            <div class="hover-wrap">
-              <button class="btn sm" type="button" id="hover-btn">Hover me</button>
-              <span class="tooltip" id="hover-tip" role="tooltip" hidden>Tooltip visible!</span>
-            </div>
-          </div>
-          <div class="pg-out" id="action-result" data-testid="action-result">Waiting for mouse action</div>
-        </div>
-
-        <div class="pg-group">
-          <div class="dnd-area">
-            <div class="drag-item" id="drag-src" data-testid="drag-source" draggable="true">Bug Ticket #404</div>
-            <div class="drop-zone" id="drop-tgt" data-testid="drop-target">Drop here to verify</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. COMPLEX STRUCTURES -->
-      <section class="pg-panel" aria-labelledby="p3-h">
-        <h2 id="p3-h">3. Complex Structures</h2>
-        <p class="pg-sub">Practice sorting/pagination, <code>frameLocator()</code>, Shadow DOM, and <code>getByRole('dialog')</code>.</p>
-
-        <div class="pg-group">
-          <div class="tbl-wrap">
-            <table class="pg-tbl" aria-label="Test runs table">
-              <thead>
-                <tr>
-                  <th><button type="button" data-sort="name">Suite &#8597;</button></th>
-                  <th><button type="button" data-sort="status">Status &#8597;</button></th>
-                  <th><button type="button" data-sort="priority">Priority &#8597;</button></th>
-                </tr>
-              </thead>
-              <tbody id="tbl-body"></tbody>
-            </table>
-          </div>
-          <div class="pg-row" style="justify-content:space-between">
-            <button class="btn sm" type="button" id="prev-page">Prev</button>
-            <span class="meta" id="page-info" style="margin:0">Page 1 of 2</span>
-            <button class="btn sm" type="button" id="next-page">Next</button>
-          </div>
-        </div>
-
-        <div class="pg-group">
-          <iframe
-            class="pg-frame"
-            title="Embedded QA Frame"
-            srcdoc="<!doctype html><html><body style='margin:0;padding:14px;font-family:monospace;background:#0a1811;color:#e4f4ea;display:flex;align-items:center;justify-content:space-between;gap:10px'><span id='f-msg'>Frame ready</span><button id='f-btn' style='padding:8px 14px;border-radius:8px;border:0;background:#00ff88;color:#04120a;font-weight:700;cursor:pointer' onclick=&quot;document.getElementById('f-msg').textContent='Frame button clicked!'&quot;>Click Inside Frame</button></body></html>">
-          </iframe>
-        </div>
-
-        <div class="pg-group">
-          <div id="shadow-host" class="shadow-box"></div>
-        </div>
-
-        <div class="pg-group">
-          <div class="pg-row">
-            <button class="btn sm" type="button" id="open-modal">Open Modal</button>
-            <span class="meta" id="modal-status" style="margin:0">Modal closed</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. BROWSER DIALOGS & ASYNC STATES -->
-      <section class="pg-panel" aria-labelledby="p4-h">
-        <h2 id="p4-h">4. Browser Dialogs &amp; Async States</h2>
-        <p class="pg-sub">Practice <code>page.on('dialog')</code>, <code>waitForEvent('page')</code>, and auto-waiting assertions.</p>
-
-        <div class="pg-group">
-          <div class="pg-row">
-            <button class="btn sm" type="button" id="alert-btn">Trigger Alert</button>
-            <button class="btn sm" type="button" id="confirm-btn">Trigger Confirm</button>
-            <button class="btn sm" type="button" id="prompt-btn">Trigger Prompt</button>
-          </div>
-          <div class="pg-out" id="dialog-result" data-testid="dialog-result">No dialog triggered</div>
-        </div>
-
-        <div class="pg-group">
-          <div class="pg-row">
-            <a class="btn sm" href="projects.html" target="_blank" rel="noopener">Open Projects in New Tab</a>
-            <button class="btn sm" type="button" id="popup-btn">Open Popup Tab</button>
-          </div>
-        </div>
-
-        <div class="pg-group">
-          <div class="pg-row">
-            <button class="btn primary sm" type="button" id="async-btn">Fetch Async Status</button>
-          </div>
-          <div class="pg-out" id="async-result" data-testid="async-result">Idle — click to simulate a 1.8s API delay</div>
-        </div>
-      </section>
-    </div>
-
-    <!-- 4-Step Playwright Cheat Sheet -->
-    <section class="pg-panel cheat" aria-labelledby="cs-h">
-      <h2 id="cs-h">Playwright 4-Step Lesson Example</h2>
-      <p class="pg-sub">Copy this into a <code>.spec.js</code> file to test this page end-to-end:</p>
-      <pre><code>import { test, expect } from '@playwright/test';
-
-test('junior QA playground flow', async ({ page }) =&gt; {
-  // 1. Navigate
-  await page.goto('https://arjawad-qa.vercel.app/tools.html');
-
-  // 2. Locate &amp; 3. Act
-  await page.getByLabel('Full name').fill('Junior QA');
-  await page.getByRole('radio', { name: 'QA Sandbox' }).check();
-  await page.getByRole('button', { name: 'Submit Form' }).click();
-
-  // 4. Assert
-  await expect(page.getByTestId('form-result')).toContainText('Junior QA');
-  await expect(page.getByTestId('form-result')).toContainText('QA Sandbox');
-});</code></pre>
-    </section>
   </div>
 </main>
-
-<!-- Modal Dialog -->
-<div class="modal-backdrop" id="pg-modal" hidden>
-  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-head">
-      <h3 id="modal-title">QA Verification Modal</h3>
-      <button class="icon-btn" type="button" id="close-modal" aria-label="Close modal">&times;</button>
-    </div>
-    <p style="margin:0;color:var(--muted)">Use <code>page.getByRole('dialog')</code> to locate this popup and assert its contents.</p>
-    <div class="pg-row">
-      <button class="btn primary sm" type="button" id="confirm-modal">Confirm Action</button>
-      <button class="btn sm" type="button" id="cancel-modal">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <footer class="site-footer">
   <div class="wrap foot">
@@ -358,217 +81,8 @@ test('junior QA playground flow', async ({ page }) =&gt; {
     </nav>
   </div>
 </footer>
-
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
 <script src="fx3d.js" defer></script>
-<script>
-(function () {
-  var logEl = document.getElementById("pw-log");
-  function log(msg) { logEl.textContent = msg; }
-
-  /* 1. Form Inputs */
-  var form = document.getElementById("pg-form");
-  var tokenIn = document.getElementById("pw-token");
-  var toggleToken = document.getElementById("toggle-token");
-  toggleToken.addEventListener("click", function () {
-    var show = tokenIn.type === "password";
-    tokenIn.type = show ? "text" : "password";
-    toggleToken.textContent = show ? "Hide" : "Show";
-    toggleToken.setAttribute("aria-pressed", String(show));
-  });
-
-  document.getElementById("file-in").addEventListener("change", function (e) {
-    var f = e.target.files[0];
-    document.getElementById("file-status").textContent = f ? ("Selected: " + f.name + " (" + f.size + " bytes)") : "No file selected";
-    if (f) log("Uploaded file: " + f.name);
-  });
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var name = form.fullname.value.trim() || "Anonymous";
-    var env = (form.querySelector('input[name="env"]:checked') || {}).value || "None";
-    var types = Array.from(form.querySelectorAll('input[name="ttype"]:checked')).map(function (c) { return c.value; });
-    var date = form.rdate.value || "No date";
-    var summary = "Submitted: " + name + " | " + env + " | " + (types.length ? types.join(", ") : "No types") + " | " + date;
-    document.getElementById("form-result").textContent = summary;
-    log(summary);
-  });
-
-  /* 2. Selections & Actions */
-  var browserSel = document.getElementById("browser-sel");
-  var selOut = document.getElementById("select-result");
-  browserSel.addEventListener("change", function () {
-    selOut.textContent = browserSel.value ? ("Browser selected: " + browserSel.value) : "No selection yet";
-    log(selOut.textContent);
-  });
-
-  var suites = ["Smoke Suite", "API Regression", "iOS Real Device", "Android Real Device", "Migration Check"];
-  var comboIn = document.getElementById("suite-combo");
-  var comboList = document.getElementById("suite-list");
-  function paintCombo(q) {
-    var hits = suites.filter(function (s) { return s.toLowerCase().indexOf(q.toLowerCase()) >= 0; });
-    comboList.innerHTML = hits.length ? hits.map(function (s) {
-      return '<li role="option" aria-selected="false">' + s + "</li>";
-    }).join("") : '<li aria-disabled="true">No matching suite</li>';
-    comboList.hidden = false;
-    comboIn.setAttribute("aria-expanded", "true");
-  }
-  comboIn.addEventListener("focus", function () { paintCombo(comboIn.value); });
-  comboIn.addEventListener("input", function () { paintCombo(comboIn.value); });
-  comboList.addEventListener("mousedown", function (e) {
-    if (e.target.getAttribute("role") === "option") {
-      comboIn.value = e.target.textContent;
-      comboList.hidden = true;
-      comboIn.setAttribute("aria-expanded", "false");
-      selOut.textContent = "Suite selected: " + comboIn.value;
-      log(selOut.textContent);
-    }
-  });
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest(".combo")) { comboList.hidden = true; comboIn.setAttribute("aria-expanded", "false"); }
-  });
-
-  var actOut = document.getElementById("action-result");
-  document.getElementById("dbl-btn").addEventListener("dblclick", function () {
-    actOut.textContent = "Double-click detected!";
-    log(actOut.textContent);
-  });
-  document.getElementById("ctx-btn").addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-    actOut.textContent = "Right-click detected!";
-    log(actOut.textContent);
-  });
-  var hoverBtn = document.getElementById("hover-btn"), hoverTip = document.getElementById("hover-tip");
-  hoverBtn.addEventListener("mouseenter", function () { hoverTip.hidden = false; log("Hover tooltip shown"); });
-  hoverBtn.addEventListener("mouseleave", function () { hoverTip.hidden = true; });
-  hoverBtn.addEventListener("focus", function () { hoverTip.hidden = false; });
-  hoverBtn.addEventListener("blur", function () { hoverTip.hidden = true; });
-
-  var dragSrc = document.getElementById("drag-src"), dropTgt = document.getElementById("drop-tgt");
-  dragSrc.addEventListener("dragstart", function (e) { e.dataTransfer.setData("text/plain", dragSrc.textContent); });
-  dropTgt.addEventListener("dragover", function (e) { e.preventDefault(); dropTgt.classList.add("over"); });
-  dropTgt.addEventListener("dragleave", function () { dropTgt.classList.remove("over"); });
-  dropTgt.addEventListener("drop", function (e) {
-    e.preventDefault();
-    dropTgt.classList.remove("over");
-    dropTgt.classList.add("done");
-    var txt = e.dataTransfer.getData("text/plain") || "Bug Ticket #404";
-    dropTgt.textContent = "Dropped: " + txt;
-    log(dropTgt.textContent);
-  });
-
-  /* 3. Data Table (Sort + Pagination) */
-  var rowsData = [
-    { name: "Auth Login", status: "Passed", priority: "P1" },
-    { name: "Postman API", status: "Passed", priority: "P1" },
-    { name: "Checkout Flow", status: "Failed", priority: "P0" },
-    { name: "iOS Push Sync", status: "Passed", priority: "P2" },
-    { name: "CSV Export", status: "Skipped", priority: "P3" },
-    { name: "Profile Edit", status: "Passed", priority: "P2" }
-  ];
-  var sortKey = "name", sortAsc = true, curPage = 1, perPage = 3;
-  function drawTable() {
-    var sorted = rowsData.slice().sort(function (a, b) {
-      return sortAsc ? a[sortKey].localeCompare(b[sortKey]) : b[sortKey].localeCompare(a[sortKey]);
-    });
-    var totalPages = Math.ceil(sorted.length / perPage);
-    var slice = sorted.slice((curPage - 1) * perPage, curPage * perPage);
-    document.getElementById("tbl-body").innerHTML = slice.map(function (r) {
-      return "<tr><td>" + r.name + "</td><td>" + r.status + "</td><td>" + r.priority + "</td></tr>";
-    }).join("");
-    document.getElementById("page-info").textContent = "Page " + curPage + " of " + totalPages;
-    document.getElementById("prev-page").disabled = curPage === 1;
-    document.getElementById("next-page").disabled = curPage === totalPages;
-  }
-  document.querySelector(".pg-tbl thead").addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-sort]");
-    if (!b) return;
-    var k = b.dataset.sort;
-    sortAsc = sortKey === k ? !sortAsc : true;
-    sortKey = k;
-    drawTable();
-    log("Table sorted by " + k + (sortAsc ? " (asc)" : " (desc)"));
-  });
-  document.getElementById("prev-page").addEventListener("click", function () { if (curPage > 1) { curPage--; drawTable(); } });
-  document.getElementById("next-page").addEventListener("click", function () { if (curPage < 2) { curPage++; drawTable(); } });
-  drawTable();
-
-  /* Shadow DOM */
-  var host = document.getElementById("shadow-host");
-  if (host.attachShadow) {
-    var sr = host.attachShadow({ mode: "open" });
-    sr.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><input id="s-in" placeholder="Shadow DOM input" style="padding:8px 10px;border-radius:8px;border:1px solid #1c3327;background:#06100b;color:#e4f4ea;flex:1;min-width:140px"><button id="s-btn" type="button" style="padding:8px 12px;border-radius:8px;border:0;background:#00ff88;color:#04120a;font-weight:700;cursor:pointer">Verify Shadow</button><span id="s-out" style="font-family:monospace;font-size:12px;color:#00ff88">Shadow ready</span></div>';
-    sr.getElementById("s-btn").addEventListener("click", function () {
-      var val = sr.getElementById("s-in").value.trim() || "Shadow";
-      sr.getElementById("s-out").textContent = "Verified: " + val;
-      log("Shadow DOM verified: " + val);
-    });
-  }
-
-  /* Modal */
-  var modal = document.getElementById("pg-modal"), mStatus = document.getElementById("modal-status");
-  function closeModal(msg) { modal.hidden = true; mStatus.textContent = msg; log(msg); }
-  document.getElementById("open-modal").addEventListener("click", function () { modal.hidden = false; mStatus.textContent = "Modal open"; log("Modal opened"); });
-  document.getElementById("close-modal").addEventListener("click", function () { closeModal("Modal closed"); });
-  document.getElementById("cancel-modal").addEventListener("click", function () { closeModal("Modal cancelled"); });
-  document.getElementById("confirm-modal").addEventListener("click", function () { closeModal("Modal confirmed!"); });
-
-  /* 4. Dialogs, New Tab & Async */
-  var dlgOut = document.getElementById("dialog-result");
-  document.getElementById("alert-btn").addEventListener("click", function () {
-    window.alert("QA Alert: Build #204 ready for smoke testing.");
-    dlgOut.textContent = "Alert closed";
-    log(dlgOut.textContent);
-  });
-  document.getElementById("confirm-btn").addEventListener("click", function () {
-    var ok = window.confirm("Approve release for staging?");
-    dlgOut.textContent = "Confirm result: " + (ok ? "Accepted" : "Dismissed");
-    log(dlgOut.textContent);
-  });
-  document.getElementById("prompt-btn").addEventListener("click", function () {
-    var ans = window.prompt("Enter tester initials:", "ARJ");
-    dlgOut.textContent = ans === null ? "Prompt cancelled" : ("Prompt result: " + ans);
-    log(dlgOut.textContent);
-  });
-
-  document.getElementById("popup-btn").addEventListener("click", function () {
-    var w = window.open("", "_blank");
-    if (w) {
-      w.document.write("<!doctype html><title>QA Popup Tab</title><body style='font-family:monospace;background:#06100b;color:#00ff88;padding:40px'><h1>Popup Tab Opened</h1><p>Playwright caught this new page!</p></body>");
-      w.document.close();
-      log("Popup tab opened");
-    }
-  });
-
-  var asyncBtn = document.getElementById("async-btn"), asyncOut = document.getElementById("async-result");
-  asyncBtn.addEventListener("click", function () {
-    asyncBtn.disabled = true;
-    asyncOut.textContent = "Loading...";
-    setTimeout(function () {
-      asyncOut.textContent = "200 OK — Payload verified after delay";
-      asyncBtn.disabled = false;
-      log(asyncOut.textContent);
-    }, 1800);
-  });
-
-  /* Reset */
-  document.getElementById("reset-pg").addEventListener("click", function () {
-    form.reset();
-    document.getElementById("file-status").textContent = "No file selected";
-    document.getElementById("form-result").textContent = "Form not submitted yet";
-    browserSel.value = "";
-    comboIn.value = "";
-    selOut.textContent = "No selection yet";
-    actOut.textContent = "Waiting for mouse action";
-    dropTgt.className = "drop-zone";
-    dropTgt.textContent = "Drop here to verify";
-    dlgOut.textContent = "No dialog triggered";
-    asyncOut.textContent = "Idle — click to simulate a 1.8s API delay";
-    mStatus.textContent = "Modal closed";
-    log("Playground reset.");
-  });
-})();
-</script>
 </body>
 </html>
