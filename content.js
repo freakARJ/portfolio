@@ -1,5 +1,13 @@
 /* Fallback content. In Phase 3 the pages read from Supabase first and use this if the database is unreachable. */
 window.SITE = {
+  skills: [
+    { title: "Manual testing", tags: ["Test plans", "Test case design", "Exploratory", "Regression", "Migration", "Release validation"] },
+    { title: "API and performance", tags: ["Postman scripts", "Collection Runner", "JMeter", "Bulk test data"] },
+    { title: "Automation", tags: ["Selenium", "Browser automation", "Playwright (learning)*"] },
+    { title: "Mobile", tags: ["Real iOS devices", "Real Android devices"] },
+    { title: "Tools and basics", tags: ["Jira", "MySQL", "SDLC and STLC", "Python", "Java"] },
+    { title: "Beyond testing", tags: ["Mentoring juniors", "Release note review", "User guide review"] }
+  ],
   projects: [
     { title: "Test Cases for a Login Page", kind: "Testing", tags: ["Test case design"], url: "https://github.com/freakARJ/TestCase_LoginPage" },
     { title: "API Testing with Postman", kind: "Testing", tags: ["Postman", "API"], url: "https://github.com/freakARJ/API_testing.Postman" },
