@@ -1,7 +1,7 @@
 -- Run this once in Supabase: SQL Editor -> New query -> paste -> Run.
 create table if not exists public.entries (
   id           uuid primary key default gen_random_uuid(),
-  type         text not null check (type in ('project','article','idea')),
+  type         text not null check (type in ('project','article','idea','skill')),
   title        text not null check (char_length(title) between 1 and 200),
   slug         text check (slug is null or slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   summary      text,
