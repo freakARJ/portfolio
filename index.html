@@ -21,7 +21,7 @@ document.documentElement.classList.add("js");
 </script>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-page="home">
 <canvas id="bg-3d" aria-hidden="true"></canvas>
 <a class="skip" href="#main">Skip to content</a>
 
@@ -74,7 +74,7 @@ document.documentElement.classList.add("js");
     <div class="wrap">
       <h2 id="skills-h">What I test with</h2>
       <p>Skills I use at work and in my sample projects.</p>
-      <div class="grid">
+      <div class="grid" id="s-grid">
         <div class="card"><h3>Manual testing</h3>
           <ul class="chips"><li>Test plans</li><li>Test case design</li><li>Exploratory</li><li>Regression</li><li>Migration</li><li>Release validation</li></ul></div>
         <div class="card"><h3>API and performance</h3>
@@ -110,6 +110,9 @@ document.documentElement.classList.add("js");
     </nav>
   </div>
 </footer>
+<script src="content.js"></script>
+<script src="config.js"></script>
+<script src="pages.js"></script>
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
 <script src="fx3d.js" defer></script>
