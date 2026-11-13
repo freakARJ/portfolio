@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test Data Generator | Arifur Rahman Jawad</title>
+<meta name="description" content="One-click boundary, edge-case, Unicode, and security test strings for QA engineers.">
+<meta name="theme-color" content="#06100b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<script>
+try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}
+document.documentElement.classList.add("js");
+</script>
+<link rel="stylesheet" href="styles.css">
+<style>
+.back-link{display:inline-flex;align-items:center;gap:6px;margin-bottom:14px;font:.9rem var(--f-mono);color:var(--accent-text);text-decoration:none}
+.back-link:hover{text-decoration:underline}
+
+.td-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding:18px;margin-bottom:24px;border-radius:var(--r);background:var(--surface-strong);border:1px solid var(--line-bright)}
+.td-bar label{flex:1;min-width:180px}
+.td-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.td-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:grid;gap:12px;align-content:start}
+.td-panel h2{margin:0;font-size:1.18rem}
+
+.td-item{display:grid;gap:6px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--bg-2) 78%,transparent);border:1px solid var(--line)}
+.td-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.td-label{font:600 .8rem var(--f-mono);color:var(--muted)}
+.td-val{font:.84rem var(--f-mono);color:var(--text);word-break:break-all;max-height:76px;overflow:auto;user-select:all}
+.copy-btn{min-height:32px;padding:0 12px;font-size:.8rem}
+.copy-btn.ok{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+@media(max-width:860px){.td-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="testdata">
+<canvas id="bg-3d" aria-hidden="true"></canvas>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="arjawad, home">arjawad<i>_</i></a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="journey.html">QA Journey</a>
+      <a href="ideas.html">Free Ideas</a>
+      <a href="tools.html" aria-current="page">Tools</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to light mode" aria-pressed="false" title="Toggle dark / light"><span aria-hidden="true">&#9790;</span></button>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span aria-hidden="true">&#9776;</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="main-pad">
+  <div class="wrap">
+    <div class="page-head">
+      <a class="back-link" href="tools.html">&larr; All Tools</a>
+      <h1>Boundary &amp; Edge-Case Test Data</h1>
+      <p>One-click strings for testing limits, validation, encoding, and security handling.</p>
+    </div>
+
+    <!-- Custom Length & Random Generator -->
+    <div class="td-bar">
+      <label>Custom string length (chars)
+        <input id="len-in" type="number" min="1" max="10000" value="256">
+      </label>
+      <button class="btn primary sm" id="gen-len" type="button">Copy N-char String</button>
+      <button class="btn sm" id="regen-rand" type="button">&#8635; New Random Set</button>
+    </div>
+
+    <div class="td-grid" id="td-grid"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot">
+    <span>&copy; <span id="year">2026</span> Arifur Rahman Jawad</span>
+    <nav aria-label="Social">
+      <a href="https://github.com/freakARJ" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/arjawad" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:arjawad.cse@gmail.com">Email</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
+<script src="fx3d.js" defer></script>
+<script>
+(function () {
+  var grid = document.getElementById("td-grid");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function copyText(text, btn) {
+    function done() {
+      var old = btn.textContent;
+      btn.textContent = "Copied!";
+      btn.classList.add("ok");
+      setTimeout(function () { btn.textContent = old; btn.classList.remove("ok"); }, 1200);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      done();
+    }
+  }
+
+  function makeRand() {
+    var id = Math.random().toString(36).slice(2, 8);
+    var ts = Date.now();
+    return [
+      { label: "Unique QA Email", val: "qa+" + id + "." + (ts % 1000) + "@example.com" },
+      { label: "UUID v4-style ID", val: "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16); }) },
+      { label: "Random Username", val: "qa_user_" + id },
+      { label: "ISO Timestamp", val: new Date().toISOString() }
+    ];
+  }
+
+  function getGroups() {
+    return [
+      {
+        title: "1. Boundary & Whitespace",
+        items: [
+          { label: "Whitespace Only (3 spaces)", val: "   " },
+          { label: "Leading & Trailing Spaces", val: "  test_user  " },
+          { label: "Exact 255 Characters", val: "A".repeat(255) },
+          { label: "256 Characters (Overflow)", val: "B".repeat(256) },
+          { label: "1,000 Characters", val: "QA12345678".repeat(100) }
+        ]
+      },
+      {
+        title: "2. Security & Injection Probes",
+        items: [
+          { label: "Basic XSS Script", val: "<script>alert(1)<\/script>" },
+          { label: "IMG Onerror XSS", val: "<img src=x onerror=alert(1)>" },
+          { label: "SQL Injection Bypass", val: "' OR '1'='1" },
+          { label: "Path Traversal", val: "../../etc/passwd" },
+          { label: "JSON Breaking Quote", val: '{"key": "val\\"ue"}' }
+        ]
+      },
+      {
+        title: "3. Unicode, Emoji & Symbols",
+        items: [
+          { label: "Bangla UTF-8", val: "বাংলা টেক্সট পরীক্ষামূলক ইনপুট" },
+          { label: "Emoji Family & Symbols", val: "👨‍👩‍👧‍👦🔥✅🚀" },
+          { label: "Arabic RTL Text", val: "اختبار النص العربي" },
+          { label: "All Special Symbols", val: "!@#$%^&*()_+-=[]{}|;':\",./<>?" }
+        ]
+      },
+      {
+        title: "4. Emails, Dates & Numbers",
+        items: [
+          { label: "Valid Plus-Tag Email", val: "qa+test.01@sub-domain.example.co.uk" },
+          { label: "Invalid Double-@ Email", val: "qa@@example..com" },
+          { label: "Leap Year Date", val: "2024-02-29" },
+          { label: "Invalid Non-Leap Feb 29", val: "2025-02-29" },
+          { label: "Max 32-bit Int", val: "2147483647" },
+          { label: "Zero & Negative", val: "-1" },
+          { label: "BD Phone Format", val: "+8801712345678" }
+        ]
+      },
+      {
+        title: "5. Fresh Random Values",
+        items: makeRand()
+      }
+    ];
+  }
+
+  function render() {
+    var groups = getGroups();
+    grid.innerHTML = groups.map(function (g, gi) {
+      return '<section class="td-panel"><h2>' + esc(g.title) + "</h2>" + g.items.map(function (it, ii) {
+        return '<div class="td-item"><div class="td-top"><span class="td-label">' + esc(it.label) +
+          '</span><button class="btn sm copy-btn" type="button" data-g="' + gi + '" data-i="' + ii + '">Copy</button></div>' +
+          '<code class="td-val">' + esc(it.val) + "</code></div>";
+      }).join("") + "</section>";
+    }).join("");
+    grid._groups = groups;
+  }
+
+  grid.addEventListener("click", function (e) {
+    var b = e.target.closest(".copy-btn");
+    if (!b) return;
+    var item = grid._groups[b.dataset.g].items[b.dataset.i];
+    copyText(item.val, b);
+  });
+
+  document.getElementById("gen-len").addEventListener("click", function () {
+    var n = Math.max(1, Math.min(10000, Number(document.getElementById("len-in").value) || 256));
+    copyText("X".repeat(n), this);
+  });
+
+  document.getElementById("regen-rand").addEventListener("click", render);
+  render();
+})();
+</script>
+</body>
+</html>
