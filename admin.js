@@ -1,6 +1,6 @@
 (function () {
   var cfg = window.CONFIG || {}, app = document.getElementById("app"), session = null, type = "project", editing = null, dirty = false;
-  var TYPES = { project: "Projects", article: "Articles", idea: "Ideas" };
+  var TYPES = { project: "Projects", article: "Articles", idea: "Ideas", skill: "Skills" };
   function $(s, r) { return (r || document).querySelector(s); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function persist() { try { if (session) sessionStorage.setItem("arj_s", JSON.stringify(session)); else sessionStorage.removeItem("arj_s"); } catch (e) {} }
@@ -57,10 +57,11 @@
     chrome(); editing = null; dirty = false; document.title = "Manage content | Studio";
     app.innerHTML = "<h1>Manage content</h1><div class=\"filter\" id=\"tabs\">" + Object.keys(TYPES).map(function (k) { return '<button type="button" data-t="' + k + '" aria-pressed="' + (k === type) + '">' + TYPES[k] + "</button>"; }).join("") +
       '</div><div class="bar2"><button class="btn primary sm" id="new" type="button">Add new</button></div><div id="rows"><p class="hint" role="status">Loading...</p></div>' +
-      '<details class="tools"><summary>Tools</summary><p class="hint">Copies the starter content into an empty database. Does nothing if content already exists.</p><button class="btn sm" id="seed" type="button">Import starter content</button></details>';
+      '<details class="tools"><summary>Tools</summary><p class="hint">Import starter content into an empty database, or import your starter skill cards.</p><div class="actions"><button class="btn sm" id="seed" type="button">Import starter content</button><button class="btn sm" id="seed-skills" type="button">Import starter skills</button></div></details>';
     $("#tabs").addEventListener("click", function (e) { if (e.target.dataset.t) { type = e.target.dataset.t; viewList(); } });
     $("#new").addEventListener("click", function () { viewEdit(null); });
     $("#seed").addEventListener("click", seed);
+    $("#seed-skills").addEventListener("click", seedSkills);
     api("/rest/v1/entries?select=*&type=eq." + type + "&order=sort_order.asc,entry_date.desc,created_at.desc").then(function (rows) {
       var box = $("#rows");
       if (!rows.length) { box.innerHTML = '<div class="empty"><p>Nothing here yet. Click "Add new".</p></div>'; return; }
@@ -84,15 +85,16 @@
     editing = row; dirty = false; var r = row || {}, today = new Date().toISOString().slice(0, 10);
     document.title = (row ? "Edit" : "Add") + " | Studio";
     var h = '<form class="edit" id="ef" novalidate><h1>' + (row ? "Edit" : "Add") + " " + TYPES[type].slice(0, -1).toLowerCase() + "</h1>" +
-      fld("Title", '<input name="title" maxlength="200" value="' + esc(r.title) + '">');
+      fld(type === "skill" ? "Category title" : "Title", '<input name="title" maxlength="200" value="' + esc(r.title) + '">');
     if (type === "article") h += fld("Slug (the end of the article's web address)", '<input name="slug" value="' + esc(r.slug) + '">', "Lowercase letters, numbers and dashes only.");
     if (type === "project") h += fld("Kind", '<input name="kind" list="kinds" value="' + esc(r.kind || "Testing") + '"><datalist id="kinds"><option>Testing</option><option>Academic</option></datalist>') +
       fld("Description (optional)", '<textarea name="summary" rows="3">' + esc(r.summary) + "</textarea>") + fld("Link (optional)", '<input name="url" type="url" placeholder="https://" value="' + esc(r.url) + '">') +
       fld("Order (lower numbers show first)", '<input name="sort_order" type="number" step="1" value="' + esc(r.sort_order == null ? 0 : r.sort_order) + '">');
+    if (type === "skill") h += fld("Order (lower numbers show first)", '<input name="sort_order" type="number" step="1" value="' + esc(r.sort_order == null ? 0 : r.sort_order) + '">');
     if (type === "article") h += fld("Summary (shown in the list)", '<textarea name="summary" rows="2">' + esc(r.summary) + "</textarea>");
-    if (type !== "project") h += '<div class="split"><label>' + (type === "idea" ? "Idea" : "Article") + " (Markdown)<textarea name=\"body\">" + esc(r.body) + '</textarea><span class="hint">## heading, **bold**, - bullet, 1. number, ``` code</span></label><div><p class="meta">Live preview</p><div class="prose preview" id="prev"></div></div></div>';
-    h += fld("Tags (separate with commas)", '<input name="tags" value="' + esc((r.tags || []).join(", ")) + '">');
-    if (type !== "project") h += fld("Date", '<input name="entry_date" type="date" value="' + esc(r.entry_date || today) + '">');
+    if (type === "article" || type === "idea") h += '<div class="split"><label>' + (type === "idea" ? "Idea" : "Article") + " (Markdown)<textarea name=\"body\">" + esc(r.body) + '</textarea><span class="hint">## heading, **bold**, - bullet, 1. number, ``` code</span></label><div><p class="meta">Live preview</p><div class="prose preview" id="prev"></div></div></div>';
+    h += fld(type === "skill" ? "Skills (separate with commas)" : "Tags (separate with commas)", '<input name="tags" value="' + esc((r.tags || []).join(", ")) + '">', type === "skill" ? 'Add * at the end for a dashed "learning" badge (e.g. Playwright (learning)*).' : "");
+    if (type === "article" || type === "idea") h += fld("Date", '<input name="entry_date" type="date" value="' + esc(r.entry_date || today) + '">');
     h += '<label class="check"><input type="checkbox" name="published"' + (row && !r.published ? "" : " checked") + '> Published (visible on the website)</label><p class="err" id="fe" role="alert"></p>' +
       '<div class="actions"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" id="cancel">Cancel</button></div></form>';
     app.innerHTML = h;
@@ -119,6 +121,11 @@
       if (v.url && !/^https?:\/\/\S+$/.test(v.url)) bad(f.url, "The link must start with http:// or https://");
       if (!Number.isInteger(v.sort_order)) bad(f.sort_order, "Order must be a whole number.");
       v.entry_date = (editing && editing.entry_date) || new Date().toISOString().slice(0, 10);
+    } else if (type === "skill") {
+      v.sort_order = Number(f.sort_order.value);
+      if (!Number.isInteger(v.sort_order)) bad(f.sort_order, "Order must be a whole number.");
+      if (!v.tags.length) bad(f.tags, "Add at least one skill.");
+      v.entry_date = (editing && editing.entry_date) || new Date().toISOString().slice(0, 10);
     } else {
       v.body = f.body.value.trim(); v.entry_date = f.entry_date.value;
       if (!v.body) bad(f.body, "Write something in the body.");
@@ -140,16 +147,28 @@
     });
   }
 
+  function makeRow(o) {
+    var today = new Date().toISOString().slice(0, 10);
+    return { type: o.type, title: o.title, slug: o.slug || null, summary: o.summary || null, body: o.body || null, kind: o.kind || null, url: o.url || null, tags: o.tags || [], sort_order: o.sort_order || 0, published: true, entry_date: o.entry_date || today };
+  }
+
   function seed() {
     api("/rest/v1/entries?select=id&limit=1").then(function (have) {
       if (have.length) { toast("Skipped: the database already has content.", true); return; }
-      var S = window.SITE, rows = [], today = new Date().toISOString().slice(0, 10);
-      /* Every row must have exactly the same keys, or the database rejects the batch. */
-      function row(o) { return { type: o.type, title: o.title, slug: o.slug || null, summary: o.summary || null, body: o.body || null, kind: o.kind || null, url: o.url || null, tags: o.tags || [], sort_order: o.sort_order || 0, published: true, entry_date: o.entry_date || today }; }
-      S.projects.forEach(function (p, i) { rows.push(row({ type: "project", title: p.title, kind: p.kind, summary: p.text, url: p.url, tags: p.tags, sort_order: i })); });
-      S.articles.forEach(function (a) { rows.push(row({ type: "article", title: a.title, slug: a.slug, summary: a.summary, body: a.body, tags: a.tags, entry_date: a.date })); });
-      S.ideas.forEach(function (d) { rows.push(row({ type: "idea", title: d.title, body: d.body, tags: d.tags, entry_date: d.date })); });
+      var S = window.SITE, rows = [];
+      (S.skills || []).forEach(function (sk, i) { rows.push(makeRow({ type: "skill", title: sk.title, tags: sk.tags, sort_order: i })); });
+      S.projects.forEach(function (p, i) { rows.push(makeRow({ type: "project", title: p.title, kind: p.kind, summary: p.text, url: p.url, tags: p.tags, sort_order: i })); });
+      S.articles.forEach(function (a) { rows.push(makeRow({ type: "article", title: a.title, slug: a.slug, summary: a.summary, body: a.body, tags: a.tags, entry_date: a.date })); });
+      S.ideas.forEach(function (d) { rows.push(makeRow({ type: "idea", title: d.title, body: d.body, tags: d.tags, entry_date: d.date })); });
       return api("/rest/v1/entries", { method: "POST", body: JSON.stringify(rows), prefer: "return=minimal" }).then(function () { toast("Imported " + rows.length + " items."); viewList(); });
+    }).catch(function (x) { if (!x.expired) toast(x.message, true); });
+  }
+
+  function seedSkills() {
+    api("/rest/v1/entries?select=id&type=eq.skill&limit=1").then(function (have) {
+      if (have.length) { toast("Skipped: skills already exist in the database.", true); return; }
+      var rows = (window.SITE.skills || []).map(function (sk, i) { return makeRow({ type: "skill", title: sk.title, tags: sk.tags, sort_order: i }); });
+      return api("/rest/v1/entries", { method: "POST", body: JSON.stringify(rows), prefer: "return=minimal" }).then(function () { toast("Imported " + rows.length + " skill categories."); type = "skill"; viewList(); });
     }).catch(function (x) { if (!x.expired) toast(x.message, true); });
   }
 
