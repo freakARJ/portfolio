@@ -1,5 +1,5 @@
 (function () {
-  var FALLBACK = window.SITE || { projects: [], articles: [], ideas: [] };
+  var FALLBACK = window.SITE || { skills: [], projects: [], articles: [], ideas: [] };
   var page = document.body.dataset.page;
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -26,9 +26,26 @@
   function fmtDate(d) { return new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }); }
   function mins(t) { return Math.max(1, Math.round(t.split(/\s+/).length / 200)); }
   function tags(a) { return '<ul class="chips">' + (a || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>"; }
+  function skillTags(a) {
+    return '<ul class="chips">' + (a || []).map(function (t) {
+      var soon = /\*$/.test(t);
+      return "<li" + (soon ? ' class="soon"' : "") + ">" + esc(soon ? t.slice(0, -1).trim() : t) + "</li>";
+    }).join("") + "</ul>";
+  }
   function empty(msg) { return '<div class="empty"><p>' + msg + "</p></div>"; }
 
   function render(S) {
+  /* Home Skills */
+  if (page === "home") {
+    var sGrid = document.getElementById("s-grid");
+    var skills = (S.skills && S.skills.length) ? S.skills : (FALLBACK.skills || []);
+    if (sGrid && skills.length) {
+      sGrid.innerHTML = skills.map(function (sk) {
+        return '<div class="card"><h3>' + esc(sk.title) + "</h3>" + skillTags(sk.tags) + "</div>";
+      }).join("");
+    }
+  }
+
   /* Projects */
   if (page === "projects") {
     var grid = document.getElementById("p-grid"), bar = document.getElementById("p-filter"), kinds = ["All"];
@@ -80,10 +97,11 @@
   /* Load content: database first, saved fallback if it is slow or down */
   function safeUrl(u) { return /^https?:\/\//.test(u || "") ? u : ""; }
   function mapRows(rows) {
-    var o = { projects: [], articles: [], ideas: [] };
+    var o = { skills: [], projects: [], articles: [], ideas: [] };
     rows.forEach(function (r) {
       var t = r.tags || [];
-      if (r.type === "project") o.projects.push({ title: r.title, kind: r.kind || "Other", tags: t, text: r.summary || "", url: safeUrl(r.url) });
+      if (r.type === "skill") o.skills.push({ title: r.title, tags: t });
+      else if (r.type === "project") o.projects.push({ title: r.title, kind: r.kind || "Other", tags: t, text: r.summary || "", url: safeUrl(r.url) });
       else if (r.type === "article") o.articles.push({ slug: r.slug, date: r.entry_date, title: r.title, summary: r.summary || "", tags: t, body: r.body || "" });
       else if (r.type === "idea") o.ideas.push({ id: r.id, date: r.entry_date, title: r.title, tags: t, body: r.body || "" });
     });
@@ -99,8 +117,8 @@
       .catch(function () { clearTimeout(t); return FALLBACK; });
   }
   var boxes = { projects: "p-grid", journey: "j-box", ideas: "i-box" };
-  if (boxes[page]) {
-    var el = document.getElementById(boxes[page]);
+  if (boxes[page] || page === "home") {
+    var el = boxes[page] ? document.getElementById(boxes[page]) : null;
     if (el) el.innerHTML = '<p class="hint" role="status">Loading...</p>';
     load().then(render);
   }
