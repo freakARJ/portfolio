@@ -143,10 +143,12 @@
   function seed() {
     api("/rest/v1/entries?select=id&limit=1").then(function (have) {
       if (have.length) { toast("Skipped: the database already has content.", true); return; }
-      var S = window.SITE, rows = [];
-      S.projects.forEach(function (p, i) { rows.push({ type: "project", title: p.title, kind: p.kind, summary: p.text || "", url: p.url || "", tags: p.tags, sort_order: i, published: true }); });
-      S.articles.forEach(function (a) { rows.push({ type: "article", title: a.title, slug: a.slug, summary: a.summary, body: a.body, tags: a.tags, entry_date: a.date, published: true }); });
-      S.ideas.forEach(function (d) { rows.push({ type: "idea", title: d.title, body: d.body, tags: d.tags, entry_date: d.date, published: true }); });
+      var S = window.SITE, rows = [], today = new Date().toISOString().slice(0, 10);
+      /* Every row must have exactly the same keys, or the database rejects the batch. */
+      function row(o) { return { type: o.type, title: o.title, slug: o.slug || null, summary: o.summary || null, body: o.body || null, kind: o.kind || null, url: o.url || null, tags: o.tags || [], sort_order: o.sort_order || 0, published: true, entry_date: o.entry_date || today }; }
+      S.projects.forEach(function (p, i) { rows.push(row({ type: "project", title: p.title, kind: p.kind, summary: p.text, url: p.url, tags: p.tags, sort_order: i })); });
+      S.articles.forEach(function (a) { rows.push(row({ type: "article", title: a.title, slug: a.slug, summary: a.summary, body: a.body, tags: a.tags, entry_date: a.date })); });
+      S.ideas.forEach(function (d) { rows.push(row({ type: "idea", title: d.title, body: d.body, tags: d.tags, entry_date: d.date })); });
       return api("/rest/v1/entries", { method: "POST", body: JSON.stringify(rows), prefer: "return=minimal" }).then(function () { toast("Imported " + rows.length + " items."); viewList(); });
     }).catch(function (x) { if (!x.expired) toast(x.message, true); });
   }
